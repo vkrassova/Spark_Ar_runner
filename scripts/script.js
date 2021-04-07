@@ -18,10 +18,14 @@ const screenW = CameraInfo.previewSize.x.div(screenScale)
 const screenH = CameraInfo.previewSize.y.div(screenScale);
 
 (async function () {
+  const pers = await Scene.root.findFirst('pers')
   const frontSecond = await Scene.root.findFirst('front_2')
   const frontFirst = await Scene.root.findFirst('front_1')
   const back = await Scene.root.findFirst('sity_back')
   const user = await Scene.root.findFirst('user')
+
+  pers.width = screenW.mul(0.26)
+  pers.height = screenW.mul(0.32)
 
   const backImage = [frontFirst, frontSecond, back]
 
@@ -99,5 +103,5 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     stage1TD.start()
   }
 
-  initFrontFirstAnime()
+  // initFrontFirstAnime()
 })()
