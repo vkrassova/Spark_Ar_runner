@@ -23,9 +23,12 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   const frontFirst = await Scene.root.findFirst('front_1')
   const back = await Scene.root.findFirst('sity_back')
   const user = await Scene.root.findFirst('user')
+  const persWidth = screenW.mul(0.26)
 
-  pers.width = screenW.mul(0.26)
+  pers.width = persWidth
   pers.height = screenW.mul(0.32)
+  pers.transform.y = screenH.mul(0.62)
+  pers.transform.x = screenW.mul(0.12)
 
   const backImage = [frontFirst, frontSecond, back]
 
