@@ -13,6 +13,8 @@ const Diagnostics = require('Diagnostics')
 
 const face = FaceTracking.face(0)
 
+Instruction.bind(true, 'tap_to_start')
+
 const screenScale = CameraInfo.previewScreenScale
 const screenW = CameraInfo.previewSize.x.div(screenScale)
 const screenH = CameraInfo.previewSize.y.div(screenScale);
@@ -49,8 +51,8 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
 
   const widthImageUser = screenW.mul(0.48)
 
-  const rightUser = widthImageUser.mul(7.3)
-  const leftUser = widthImageUser.add(600).neg()
+  const rightUser = widthImageUser.mul(8.29)
+  const leftUser = widthImageUser.mul(4.8).neg()
 
   user.width = widthImageUser
   user.height = screenW.mul(0.64)
@@ -74,8 +76,6 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
 
     stageTD.start()
   }
-
-  // initUserAnimation()
 
   // анимация бэкграунда
   const initFrontFirstAnime = () => {
@@ -106,5 +106,16 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     stage1TD.start()
   }
 
-  // initFrontFirstAnime()
+  let isOnce = true
+  let isRun = false
+
+  TouchGestures.onTap().subscribe((gesture) => {
+    if (isOnce) {
+      Instruction.bind(false, 'tap_to_start')
+      Instruction.bind(true, 'blink_eyes')
+      initFrontFirstAnime()
+      initUserAnimation()
+      isOnce = false
+    }
+  })
 })()
