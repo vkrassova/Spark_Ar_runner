@@ -34,20 +34,20 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
 
   const backImage = [frontFirst, frontSecond, back]
 
-  const startFrontFirst = 0
+  const startPoint = 0
   const startFrontSecond = screenW.mul(6.3)
   const leftFrontFirst = screenW.mul(6.3).neg()
-  const leftFrontSecond = 0
+  // const leftFrontSecond = 0
 
   backImage.forEach(img => {
     img.width = screenW.mul(6.3)
     img.height = screenH.mul(1)
-    img.transform.y = startFrontFirst
+    img.transform.y = startPoint
   })
 
-  frontFirst.transform.x = startFrontFirst
+  frontFirst.transform.x = startPoint
   frontSecond.transform.x = startFrontSecond
-  back.transform.x = startFrontFirst
+  back.transform.x = startPoint
 
   const widthImageUser = screenW.mul(0.48)
 
@@ -79,8 +79,8 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
 
   // анимация бэкграунда
   const initFrontFirstAnime = () => {
-    const samplerFirst = Animation.samplers.linear(startFrontFirst, leftFrontFirst.pinLastValue())
-    const samplerSecond = Animation.samplers.linear(startFrontSecond.pinLastValue(), leftFrontSecond)
+    const samplerFirst = Animation.samplers.linear(startPoint, leftFrontFirst.pinLastValue())
+    const samplerSecond = Animation.samplers.linear(startFrontSecond.pinLastValue(), startPoint)
 
     const stageTD = Animation.timeDriver({
       durationMilliseconds: 7000,
