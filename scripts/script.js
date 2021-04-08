@@ -27,17 +27,17 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   const user = await Scene.root.findFirst('user')
   const persWidth = screenW.mul(0.26)
 
+  const startPoint = 0
+  const startFrontSecond = screenW.mul(6.3)
+  const leftFrontFirst = screenW.mul(6.3).neg()
+  const leftBack = screenW.mul(5.3).neg()
+
   pers.width = persWidth
   pers.height = screenW.mul(0.32)
   pers.transform.y = screenH.mul(0.62)
   pers.transform.x = screenW.mul(0.12)
 
   const backImage = [frontFirst, frontSecond, back]
-
-  const startPoint = 0
-  const startFrontSecond = screenW.mul(6.3)
-  const leftFrontFirst = screenW.mul(6.3).neg()
-  // const leftFrontSecond = 0
 
   backImage.forEach(img => {
     img.width = screenW.mul(6.3)
@@ -56,7 +56,6 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
 
   user.width = widthImageUser
   user.height = screenW.mul(0.64)
-
   user.transform.x = rightUser
   user.transform.y = widthImageUser.div(2)
 
@@ -81,6 +80,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   const initFrontFirstAnime = () => {
     const samplerFirst = Animation.samplers.linear(startPoint, leftFrontFirst.pinLastValue())
     const samplerSecond = Animation.samplers.linear(startFrontSecond.pinLastValue(), startPoint)
+    const samplerBack = Animation.samplers.linear(startPoint, leftBack.pinLastValue())
 
     const stageTD = Animation.timeDriver({
       durationMilliseconds: 7000,
@@ -96,7 +96,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
 
     const animationStage1 = Animation.animate(stageTD, samplerFirst)
     const animationStage2 = Animation.animate(stageTD, samplerSecond)
-    const animationStage3 = Animation.animate(stage1TD, samplerFirst)
+    const animationStage3 = Animation.animate(stage1TD, samplerBack)
 
     frontFirst.transform.x = animationStage1
     frontSecond.transform.x = animationStage2
