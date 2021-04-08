@@ -113,7 +113,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
 
   // pers jump
   const initPersJump = () => {
-    const sampler = Animation.samplers.easeOutCirc(persDown.pinLastValue(), persUp.pinLastValue())
+    const sampler = Animation.samplers.easeOutQuint(persDown.pinLastValue(), persUp.pinLastValue())
     // const sampler2 = Animation.samplers.easeOutExpo(persUp.pinLastValue(), persDown.pinLastValue())
 
     const stageTD = Animation.timeDriver({
