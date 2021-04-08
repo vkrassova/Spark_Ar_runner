@@ -8,6 +8,7 @@ const Instruction = require('Instruction')
 const Animation = require('Animation')
 const Textures = require('Textures')
 const CameraInfo = require('CameraInfo')
+const Materials = require('Materials')
 const Time = require('Time')
 const Diagnostics = require('Diagnostics')
 
@@ -32,7 +33,14 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   const leftFrontFirst = screenW.mul(6.3).neg()
   const leftBack = screenW.mul(5.3).neg()
 
-  const persRun = await Textures.findFirst('run_seq')
+  const runSeq = await Textures.findFirst('run_seq')
+  const jumpSeq = await Textures.findFirst('jump_seq')
+
+  const [material] = await Promise.all([
+    Materials.findFirst('run-mat')
+  ])
+
+  material.diffuse = runSeq
 
   pers.width = persWidth
   pers.height = screenW.mul(0.32)
@@ -141,7 +149,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
       isStart = false
     }
 
-    if (isRun) return
+    // if (isRun) return
     isRun = true
   })
 
