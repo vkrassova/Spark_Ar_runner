@@ -48,8 +48,8 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   pers.transform.y = screenH.mul(0.62)
   pers.transform.x = screenW.mul(0.12)
 
-  tank.width = screenW.mul(0.22)
-  tank.height = screenW.mul(0.28)
+  tank.width = screenW.mul(0.21)
+  tank.height = screenW.mul(0.27)
   tank.transform.y = screenH.mul(0.65)
   tank.transform.x = screenW.mul(1)
 
@@ -122,7 +122,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     stage1TD.start()
   }
 
-  const persUp = screenW.mul(0.8)
+  const persUp = screenW.mul(0.75)
   const persDown = screenH.mul(0.62)
 
   // pers jump
@@ -147,10 +147,10 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
 
   // tank animation
   const initTankAnimation = () => {
-    const sampler = Animation.samplers.linear(rightHide.pinLastValue(), leftHide.pinLastValue())
+    const sampler = Animation.samplers.easeInOutCubic(rightHide.pinLastValue(), leftHide.pinLastValue())
 
     const stageTD = Animation.timeDriver({
-      durationMilliseconds: 800,
+      durationMilliseconds: 1500,
       loopCount: Infinity,
       mirror: false
     })
