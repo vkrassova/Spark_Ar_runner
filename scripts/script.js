@@ -108,22 +108,27 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     stage1TD.start()
   }
 
-  const persUp = screenW.mul(0.32)
+  const persUp = screenW.mul(0.8)
   const persDown = screenH.mul(0.62)
 
   // pers jump
   const initPersJump = () => {
-    const sampler = Animation.samplers.easeOutQuart(persDown.pinLastValue(), persUp.pinLastValue())
+    const sampler = Animation.samplers.easeOutCirc(persDown.pinLastValue(), persUp.pinLastValue())
+    // const sampler2 = Animation.samplers.easeOutExpo(persUp.pinLastValue(), persDown.pinLastValue())
 
     const stageTD = Animation.timeDriver({
-      durationMilliseconds: 500,
-      loopCount: Infinity,
+      durationMilliseconds: 700,
+      loopCount: 1,
       mirror: true
     })
 
     const animationStage = Animation.animate(stageTD, sampler)
 
     pers.transform.y = animationStage
+
+    // const animationStage2 = Animation.animate(stageTD, sampler2)
+
+    // pers.transform.y = animationStage2
 
     stageTD.start()
   }
@@ -140,11 +145,17 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
       initUserAnimation()
       isStart = false
     }
+
+    if (isRun) return
+    isRun = true
   })
 
   FaceGestures.onBlink(face).subscribe(() => {
     if (isBlink) {
-      initPersJump()
+      if (isRun) {
+        Instruction.bind(false, 'blink_eyes')
+        initPersJump()
+      }
     }
   })
 })()
