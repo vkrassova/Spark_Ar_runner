@@ -50,8 +50,8 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
 
   tank.width = screenW.mul(0.21)
   tank.height = screenW.mul(0.27)
-  tank.transform.y = screenH.mul(0.65)
-  tank.transform.x = screenW.mul(1)
+  // tank.transform.y = screenH.mul(0.65)
+  // tank.transform.x = screenW.mul(1)
 
   const backImage = [frontFirst, frontSecond, back]
 
@@ -130,7 +130,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     const sampler = Animation.samplers.easeInOutQuint(persDown.pinLastValue(), persUp.pinLastValue())
 
     const stageTD = Animation.timeDriver({
-      durationMilliseconds: 400,
+      durationMilliseconds: 350,
       loopCount: 2,
       mirror: true
     })
@@ -166,6 +166,15 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     stageTD.start()
   }
 
+  const collider = (pers, tank) => {
+    let xColl = false
+    let yColl = false
+
+    if ((pers.x + pers.width >= tank.x) && (pers.x <= tank.x + tank.width)) {
+       xColl = true
+     }
+  }
+
   let isStart = true
   let isRun = false
   let isBlink = true
@@ -176,7 +185,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
       Instruction.bind(true, 'blink_eyes')
       initFrontAnime()
       initUserAnimation()
-      initTankAnimation()
+      // initTankAnimation()
       isStart = false
     }
 
