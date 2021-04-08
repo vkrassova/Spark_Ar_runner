@@ -22,6 +22,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
 
 (async function () {
   const pers = await Scene.root.findFirst('pers')
+  const tank = await Scene.root.findFirst('tank')
   const frontSecond = await Scene.root.findFirst('front_2')
   const frontFirst = await Scene.root.findFirst('front_1')
   const back = await Scene.root.findFirst('sity_back')
@@ -37,7 +38,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   const jumpSeq = await Textures.findFirst('jump_seq')
 
   const [material] = await Promise.all([
-    Materials.findFirst('run-mat')
+    Materials.findFirst('pers-mat')
   ])
 
   material.diffuse = runSeq
@@ -46,6 +47,11 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   pers.height = screenW.mul(0.32)
   pers.transform.y = screenH.mul(0.62)
   pers.transform.x = screenW.mul(0.12)
+
+  tank.width = screenW.mul(0.22)
+  tank.height = screenW.mul(0.28)
+  tank.transform.y = screenH.mul(0.65)
+  tank.transform.x = screenW.mul(1)
 
   const backImage = [frontFirst, frontSecond, back]
 
@@ -87,7 +93,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   }
 
   // background animation
-  const initFrontFirstAnime = () => {
+  const initFrontAnime = () => {
     const samplerFirst = Animation.samplers.linear(startPoint, leftFrontFirst.pinLastValue())
     const samplerSecond = Animation.samplers.linear(startFrontSecond.pinLastValue(), startPoint)
     const samplerBack = Animation.samplers.linear(startPoint, leftBack.pinLastValue())
@@ -136,6 +142,26 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     stageTD.start()
   }
 
+  const rightHide = screenW.mul(1)
+  const leftHide = screenW.mul(0.22).neg()
+
+  // tank animation
+  const initTankAnimation = () => {
+    const sampler = Animation.samplers.linear(rightHide.pinLastValue(), leftHide.pinLastValue())
+
+    const stageTD = Animation.timeDriver({
+      durationMilliseconds: 800,
+      loopCount: Infinity,
+      mirror: false
+    })
+
+    const animationStage = Animation.animate(stageTD, sampler)
+
+    tank.transform.x = animationStage
+
+    stageTD.start()
+  }
+
   let isStart = true
   let isRun = false
   let isBlink = true
@@ -144,8 +170,9 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     if (isStart) {
       Instruction.bind(false, 'tap_to_start')
       Instruction.bind(true, 'blink_eyes')
-      initFrontFirstAnime()
+      initFrontAnime()
       initUserAnimation()
+      initTankAnimation()
       isStart = false
     }
 
