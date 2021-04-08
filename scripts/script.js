@@ -142,7 +142,6 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     stageTD.start()
 
     stageTD.onCompleted().subscribe(() => {
-      Diagnostics.log('TD1')
       material.diffuse = runSeq
     })
   }
