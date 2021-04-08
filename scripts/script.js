@@ -140,6 +140,11 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     pers.transform.y = animationStage
 
     stageTD.start()
+
+    stageTD.onCompleted().subscribe(() => {
+      Diagnostics.log('TD1')
+      material.diffuse = runSeq
+    })
   }
 
   const rightHide = screenW.mul(1)
@@ -176,7 +181,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
       isStart = false
     }
 
-    // if (isRun) return
+    if (isRun) return
     isRun = true
   })
 
@@ -185,6 +190,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
       if (isRun) {
         Instruction.bind(false, 'blink_eyes')
         initPersJump()
+        material.diffuse = jumpSeq
       }
     }
   })
