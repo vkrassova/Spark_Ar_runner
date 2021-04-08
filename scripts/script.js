@@ -108,18 +108,43 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     stage1TD.start()
   }
 
-  // pers jump
+  const persUp = screenW.mul(0.32)
+  const persDown = screenH.mul(0.62)
 
-  let isOnce = true
+  // pers jump
+  const initPersJump = () => {
+    const sampler = Animation.samplers.easeOutQuart(persDown.pinLastValue(), persUp.pinLastValue())
+
+    const stageTD = Animation.timeDriver({
+      durationMilliseconds: 500,
+      loopCount: Infinity,
+      mirror: true
+    })
+
+    const animationStage = Animation.animate(stageTD, sampler)
+
+    pers.transform.y = animationStage
+
+    stageTD.start()
+  }
+
+  let isStart = true
   let isRun = false
+  let isBlink = true
 
   TouchGestures.onTap().subscribe((gesture) => {
-    if (isOnce) {
+    if (isStart) {
       Instruction.bind(false, 'tap_to_start')
       Instruction.bind(true, 'blink_eyes')
       initFrontFirstAnime()
       initUserAnimation()
-      isOnce = false
+      isStart = false
+    }
+  })
+
+  FaceGestures.onBlink(face).subscribe(() => {
+    if (isBlink) {
+      initPersJump()
     }
   })
 })()
