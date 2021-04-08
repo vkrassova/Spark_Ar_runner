@@ -32,6 +32,8 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   const leftFrontFirst = screenW.mul(6.3).neg()
   const leftBack = screenW.mul(5.3).neg()
 
+  const persRun = await Textures.findFirst('run_seq')
+
   pers.width = persWidth
   pers.height = screenW.mul(0.32)
   pers.transform.y = screenH.mul(0.62)
@@ -59,7 +61,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   user.transform.x = rightUser
   user.transform.y = widthImageUser.div(2)
 
-  // анимация текстуры с камеры
+  // camera texture animation
   const initUserAnimation = () => {
     const sampler = Animation.samplers.linear(rightUser.pinLastValue(), leftUser.pinLastValue())
 
@@ -76,7 +78,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     stageTD.start()
   }
 
-  // анимация бэкграунда
+  // background animation
   const initFrontFirstAnime = () => {
     const samplerFirst = Animation.samplers.linear(startPoint, leftFrontFirst.pinLastValue())
     const samplerSecond = Animation.samplers.linear(startFrontSecond.pinLastValue(), startPoint)
@@ -105,6 +107,8 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     stageTD.start()
     stage1TD.start()
   }
+
+  // pers jump
 
   let isOnce = true
   let isRun = false
