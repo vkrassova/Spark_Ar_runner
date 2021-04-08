@@ -118,7 +118,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
 
     const stageTD = Animation.timeDriver({
       durationMilliseconds: 700,
-      loopCount: 1,
+      loopCount: 2,
       mirror: true
     })
 
