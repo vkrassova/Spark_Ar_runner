@@ -126,7 +126,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     stage1TD.start()
   }
 
-  const persUp = screenW.mul(0.75)
+  const persUp = screenW.mul(0.78)
   const persDown = screenH.mul(0.65)
 
   // pers jump
@@ -134,7 +134,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     const sampler = Animation.samplers.easeInOutQuint(persDown.pinLastValue(), persUp.pinLastValue())
 
     const stageTD = Animation.timeDriver({
-      durationMilliseconds: 350,
+      durationMilliseconds: 400,
       loopCount: 2,
       mirror: true
     })
@@ -170,13 +170,13 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   }
 
   const collider = () => {
-    const parametr = pers.transform.x.add(pers.width).pinLastValue()
-    const parametr2 = tank.transform.x.add(tank.width).pinLastValue()
-    let XColl = false
+    const param = pers.transform.x.add(pers.width).pinLastValue()
+    const param2 = tank.transform.x.add(tank.width).pinLastValue()
+    let isXcoll = false
     let YColl = false
 
-    if ((parametr >= tank.transform.x.pinLastValue()) && (pers.transform.x.pinLastValue() <= parametr2)) {
-      XColl = true
+    if ((param >= tank.transform.x.pinLastValue()) && (pers.transform.x.pinLastValue() <= param2)) {
+      isXcoll = true
       Diagnostics.log('1')
     }
   }
