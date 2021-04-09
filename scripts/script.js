@@ -27,7 +27,6 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   const frontFirst = await Scene.root.findFirst('front_1')
   const back = await Scene.root.findFirst('sity_back')
   const user = await Scene.root.findFirst('user')
-  const persWidth = screenW.mul(0.18)
 
   const startPoint = 0
   const startFrontSecond = screenW.mul(6.3)
@@ -42,6 +41,9 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   ])
 
   material.diffuse = runSeq
+
+  // параметры персонажа и препятствия
+  const persWidth = screenW.mul(0.18)
 
   pers.width = persWidth
   pers.height = screenW.mul(0.25)
@@ -65,6 +67,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   frontSecond.transform.x = startFrontSecond
   back.transform.x = startPoint
 
+  // параметры для user rectsngle
   const widthImageUser = screenW.mul(0.48)
 
   const rightUser = widthImageUser.mul(8.28)
