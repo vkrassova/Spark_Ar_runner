@@ -138,7 +138,6 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     const animationStage = Animation.animate(stageTD, sampler)
 
     pers.transform.y = animationStage
-
     stageTD.start()
 
     stageTD.onCompleted().subscribe(() => {
@@ -190,6 +189,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
         Instruction.bind(false, 'blink_eyes')
         initPersJump()
         material.diffuse = jumpSeq
+        jumpSeq.currentFrame = 1
       }
     }
   })
