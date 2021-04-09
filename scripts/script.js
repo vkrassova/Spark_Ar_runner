@@ -150,10 +150,10 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
 
   // tank animation
   const initTankAnimation = () => {
-    const sampler = Animation.samplers.easeInOutCubic(rightHide.pinLastValue(), leftHide.pinLastValue())
+    const sampler = Animation.samplers.linear(rightHide.pinLastValue(), leftHide.pinLastValue())
 
     const stageTD = Animation.timeDriver({
-      durationMilliseconds: 1500,
+      durationMilliseconds: 1300,
       loopCount: Infinity,
       mirror: false
     })
