@@ -10,7 +10,7 @@ const Textures = require('Textures')
 const CameraInfo = require('CameraInfo')
 const Materials = require('Materials')
 // const Time = require('Time')
-// const Diagnostics = require('Diagnostics')
+const Diagnostics = require('Diagnostics')
 
 const face = FaceTracking.face(0)
 
@@ -55,6 +55,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   tank.transform.y = screenH.mul(0.68)
   tank.transform.x = screenW.mul(1)
 
+  // параметры для бэкграунда
   const backImage = [frontFirst, frontSecond, back]
 
   backImage.forEach(img => {
@@ -67,7 +68,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   frontSecond.transform.x = startFrontSecond
   back.transform.x = startPoint
 
-  // параметры для user rectsngle
+  // параметры для user rectangle
   const widthImageUser = screenW.mul(0.48)
 
   const rightUser = widthImageUser.mul(8.28)
@@ -156,7 +157,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     const sampler = Animation.samplers.linear(rightHide.pinLastValue(), leftHide.pinLastValue())
 
     const stageTD = Animation.timeDriver({
-      durationMilliseconds: 1300,
+      durationMilliseconds: 2000,
       loopCount: Infinity,
       mirror: false
     })
@@ -166,6 +167,18 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     tank.transform.x = animationStage
 
     stageTD.start()
+  }
+
+  const collider = () => {
+    const parametr = pers.transform.x.add(pers.width).pinLastValue()
+    const parametr2 = tank.transform.x.add(tank.width).pinLastValue()
+    let XColl = false
+    let YColl = false
+
+    if ((parametr >= tank.transform.x.pinLastValue()) && (pers.transform.x.pinLastValue() <= parametr2)) {
+      XColl = true
+      Diagnostics.log('1')
+    }
   }
 
   let isStart = true
@@ -191,6 +204,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
       if (isRun) {
         Instruction.bind(false, 'blink_eyes')
         initPersJump()
+        collider()
         material.diffuse = jumpSeq
         jumpSeq.currentFrame = 1
       }
