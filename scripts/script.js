@@ -1,5 +1,4 @@
 const Scene = require('Scene')
-// const Patches = require('Patches')
 // const Reactive = require('Reactive')
 const FaceTracking = require('FaceTracking')
 const FaceGestures = require('FaceGestures')
@@ -26,6 +25,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   const frontSecond = await Scene.root.findFirst('front_2')
   const frontFirst = await Scene.root.findFirst('front_1')
   const back = await Scene.root.findFirst('sity_back')
+  const backImage = [frontFirst, frontSecond, back]
   const user = await Scene.root.findFirst('user')
 
   const startPoint = 0
@@ -56,8 +56,6 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   tank.transform.x = screenW.mul(1)
 
   // параметры для бэкграунда
-  const backImage = [frontFirst, frontSecond, back]
-
   backImage.forEach(img => {
     img.width = screenW.mul(6.3)
     img.height = screenH.mul(1)
@@ -189,10 +187,10 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     if (isStart) {
       Instruction.bind(false, 'tap_to_start')
       Instruction.bind(true, 'blink_eyes')
-      collider()
       initFrontAnime()
       initUserAnimation()
       initTankAnimation()
+      collider()
       isStart = false
     }
 
