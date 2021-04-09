@@ -189,6 +189,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     if (isStart) {
       Instruction.bind(false, 'tap_to_start')
       Instruction.bind(true, 'blink_eyes')
+      collider()
       initFrontAnime()
       initUserAnimation()
       initTankAnimation()
@@ -204,7 +205,6 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
       if (isRun) {
         Instruction.bind(false, 'blink_eyes')
         initPersJump()
-        collider()
         material.diffuse = jumpSeq
         jumpSeq.currentFrame = 1
       }
