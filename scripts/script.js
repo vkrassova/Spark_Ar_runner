@@ -27,7 +27,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   const frontFirst = await Scene.root.findFirst('front_1')
   const back = await Scene.root.findFirst('sity_back')
   const user = await Scene.root.findFirst('user')
-  const persWidth = screenW.mul(0.26)
+  const persWidth = screenW.mul(0.18)
 
   const startPoint = 0
   const startFrontSecond = screenW.mul(6.3)
@@ -44,13 +44,13 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   material.diffuse = runSeq
 
   pers.width = persWidth
-  pers.height = screenW.mul(0.32)
-  pers.transform.y = screenH.mul(0.62)
+  pers.height = screenW.mul(0.25)
+  pers.transform.y = screenH.mul(0.65)
   pers.transform.x = screenW.mul(0.12)
 
-  tank.width = screenW.mul(0.21)
-  tank.height = screenW.mul(0.27)
-  tank.transform.y = screenH.mul(0.65)
+  tank.width = screenW.mul(0.15)
+  tank.height = screenW.mul(0.19)
+  tank.transform.y = screenH.mul(0.68)
   tank.transform.x = screenW.mul(1)
 
   const backImage = [frontFirst, frontSecond, back]
@@ -123,7 +123,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   }
 
   const persUp = screenW.mul(0.75)
-  const persDown = screenH.mul(0.62)
+  const persDown = screenH.mul(0.65)
 
   // pers jump
   const initPersJump = () => {
