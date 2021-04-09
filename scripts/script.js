@@ -1,6 +1,6 @@
 const Scene = require('Scene')
-const Patches = require('Patches')
-const Reactive = require('Reactive')
+// const Patches = require('Patches')
+// const Reactive = require('Reactive')
 const FaceTracking = require('FaceTracking')
 const FaceGestures = require('FaceGestures')
 const TouchGestures = require('TouchGestures')
@@ -9,8 +9,8 @@ const Animation = require('Animation')
 const Textures = require('Textures')
 const CameraInfo = require('CameraInfo')
 const Materials = require('Materials')
-const Time = require('Time')
-const Diagnostics = require('Diagnostics')
+// const Time = require('Time')
+// const Diagnostics = require('Diagnostics')
 
 const face = FaceTracking.face(0)
 
@@ -50,8 +50,8 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
 
   tank.width = screenW.mul(0.21)
   tank.height = screenW.mul(0.27)
-  // tank.transform.y = screenH.mul(0.65)
-  // tank.transform.x = screenW.mul(1)
+  tank.transform.y = screenH.mul(0.65)
+  tank.transform.x = screenW.mul(1)
 
   const backImage = [frontFirst, frontSecond, back]
 
@@ -166,15 +166,6 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     stageTD.start()
   }
 
-  const collider = (pers, tank) => {
-    let xColl = false
-    let yColl = false
-
-    if ((pers.x + pers.width >= tank.x) && (pers.x <= tank.x + tank.width)) {
-       xColl = true
-     }
-  }
-
   let isStart = true
   let isRun = false
   let isBlink = true
@@ -185,7 +176,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
       Instruction.bind(true, 'blink_eyes')
       initFrontAnime()
       initUserAnimation()
-      // initTankAnimation()
+      initTankAnimation()
       isStart = false
     }
 
