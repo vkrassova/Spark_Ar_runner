@@ -122,6 +122,12 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
 
     stageTD.start()
     stage1TD.start()
+
+    stageTD.onCompleted().subscribe(() => {
+      if (material.diffuse === collider) {
+        stageTD.stop()
+      }
+    })
   }
 
   const persUp = screenW.mul(0.75)
@@ -132,7 +138,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     const sampler = Animation.samplers.easeInOutQuint(persDown.pinLastValue(), persUp.pinLastValue())
 
     const stageTD = Animation.timeDriver({
-      durationMilliseconds: 400,
+      durationMilliseconds: 600,
       loopCount: 2,
       mirror: true
     })
@@ -167,6 +173,20 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     stageTD.start()
   }
 
+  // collider
+  const collide = () => {
+    pers.transform.y.add(30).lt(tank.transform.y.add(pers.width)).monitor().subscribe(evt => {
+      pers.isYHit = evt.newValue
+    })
+
+    Reactive.and(tank.transform.x.lt(pers.transform.x.sum(pers.width)), (tank.transform.x.add(tank.width).gt(pers.transform.x.add(20)))).monitor().subscribe(evt => {
+      if (!evt.newValue) {
+        material.diffuse = collider
+      }
+      Diagnostics.log('1')
+    })
+  }
+
   let isStart = true
   let isRun = false
   let isBlink = true
@@ -178,17 +198,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
       initFrontAnime()
       initUserAnimation()
       initTankAnimation()
-
-      pers.transform.y.lt(tank.transform.y.sub(pers.height)).monitor().subscribe(evt => {
-        pers.isYHit = evt.newValue
-      })
-
-      tank.transform.x.lt(pers.transform.x.sum(pers.width)).and(tank.transform.x.ge(pers.transform.x)).monitor().subscribe(evt => {
-        if (!evt.newValue) {
-          material.diffuse = collider
-        }
-      })
-
+      collide()
       isStart = false
     }
 
@@ -206,8 +216,8 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
       }
     }
   })
-  Diagnostics.watch('pers_y', pers.transform.y)
-  Diagnostics.watch('tank_y', tank.transform.y)
-  Diagnostics.watch('pers_x', pers.transform.x)
-  Diagnostics.watch('tank_x', tank.transform.x)
+  // Diagnostics.watch('pers_y', pers.transform.y)
+  // Diagnostics.watch('tank_y', tank.transform.y)
+  // Diagnostics.watch('pers_x', pers.transform.x)
+  // Diagnostics.watch('tank_x', tank.transform.x)
 })()
