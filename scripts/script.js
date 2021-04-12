@@ -35,6 +35,8 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
 
   const runSeq = await Textures.findFirst('run_seq')
   const jumpSeq = await Textures.findFirst('jump_seq')
+  const collider = await Textures.findFirst('die')
+  const param = pers.transform.x.pinLastValue()
 
   const [material] = await Promise.all([
     Materials.findFirst('pers-mat')
@@ -141,9 +143,17 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
 
     pers.transform.y = animationStage
     stageTD.start()
+    let isCollider = false
 
     stageTD.onCompleted().subscribe(() => {
       material.diffuse = runSeq
+      if (param >= tank.transform.x.pinLastValue()) {
+        isCollider = true
+      }
+
+      if (isCollider) {
+        material.diffuse = collider
+      }
     })
   }
 
@@ -167,17 +177,8 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     stageTD.start()
   }
 
-  const collider = () => {
-    const param = pers.transform.x.add(pers.width).pinLastValue()
-    const param2 = tank.transform.x.add(tank.width).pinLastValue()
-    let isXcoll = false
-    let YColl = false
-
-    if ((param >= tank.transform.x.pinLastValue()) && (pers.transform.x.pinLastValue() <= param2)) {
-      isXcoll = true
-      Diagnostics.log('1')
-    }
-  }
+  Diagnostics.watch('x', param)
+  Diagnostics.watch('x', tank.transform.x)
 
   let isStart = true
   let isRun = false
@@ -190,7 +191,6 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
       initFrontAnime()
       initUserAnimation()
       initTankAnimation()
-      collider()
       isStart = false
     }
 
