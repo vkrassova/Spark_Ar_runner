@@ -36,7 +36,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   const runSeq = await Textures.findFirst('run_seq')
   const jumpSeq = await Textures.findFirst('jump_seq')
   const collider = await Textures.findFirst('die')
-  const param = pers.transform.x.pinLastValue()
+  const widthImageUser = screenW.mul(0.48)
 
   const [material] = await Promise.all([
     Materials.findFirst('pers-mat')
@@ -53,8 +53,8 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   pers.transform.x = screenW.mul(0.12)
 
   tank.width = screenW.mul(0.15)
-  tank.height = screenW.mul(0.19)
-  tank.transform.y = screenH.mul(0.68)
+  tank.height = screenW.mul(0.23)
+  tank.transform.y = screenH.mul(0.65)
   tank.transform.x = screenW.mul(1)
 
   // параметры для бэкграунда
@@ -69,8 +69,6 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   back.transform.x = startPoint
 
   // параметры для user rectangle
-  const widthImageUser = screenW.mul(0.48)
-
   const rightUser = widthImageUser.mul(8.28)
   const leftUser = widthImageUser.mul(4.8).neg()
 
@@ -126,7 +124,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     stage1TD.start()
   }
 
-  const persUp = screenW.mul(0.78)
+  const persUp = screenW.mul(0.75)
   const persDown = screenH.mul(0.65)
 
   // pers jump
@@ -181,10 +179,16 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
       initUserAnimation()
       initTankAnimation()
 
-      tank.transform.x.lt(pers.transform.x.add(pers.width)).monitor().subscribe(evt => {
-        material.diffuse = collider
-        Diagnostics.log('1')
+      pers.transform.y.lt(tank.transform.y.sub(pers.height)).monitor().subscribe(evt => {
+        pers.isYHit = evt.newValue
       })
+
+      tank.transform.x.lt(pers.transform.x.sum(pers.width)).and(tank.transform.x.ge(pers.transform.x)).monitor().subscribe(evt => {
+        if (!evt.newValue) {
+          material.diffuse = collider
+        }
+      })
+
       isStart = false
     }
 
@@ -202,6 +206,8 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
       }
     }
   })
-  Diagnostics.watch('x', param)
-  Diagnostics.watch('x', tank.transform.x)
+  Diagnostics.watch('pers_y', pers.transform.y)
+  Diagnostics.watch('tank_y', tank.transform.y)
+  Diagnostics.watch('pers_x', pers.transform.x)
+  Diagnostics.watch('tank_x', tank.transform.x)
 })()
