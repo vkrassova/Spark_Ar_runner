@@ -1,5 +1,5 @@
 const Scene = require('Scene')
-// const Reactive = require('Reactive')
+const Reactive = require('Reactive')
 const FaceTracking = require('FaceTracking')
 const FaceGestures = require('FaceGestures')
 const TouchGestures = require('TouchGestures')
@@ -143,17 +143,9 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
 
     pers.transform.y = animationStage
     stageTD.start()
-    let isCollider = false
 
     stageTD.onCompleted().subscribe(() => {
       material.diffuse = runSeq
-      if (param >= tank.transform.x.pinLastValue()) {
-        isCollider = true
-      }
-
-      if (isCollider) {
-        material.diffuse = collider
-      }
     })
   }
 
@@ -177,9 +169,6 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     stageTD.start()
   }
 
-  Diagnostics.watch('x', param)
-  Diagnostics.watch('x', tank.transform.x)
-
   let isStart = true
   let isRun = false
   let isBlink = true
@@ -191,6 +180,11 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
       initFrontAnime()
       initUserAnimation()
       initTankAnimation()
+
+      tank.transform.x.lt(pers.transform.x.add(pers.width)).monitor().subscribe(evt => {
+        material.diffuse = collider
+        Diagnostics.log('1')
+      })
       isStart = false
     }
 
@@ -208,4 +202,6 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
       }
     }
   })
+  Diagnostics.watch('x', param)
+  Diagnostics.watch('x', tank.transform.x)
 })()
