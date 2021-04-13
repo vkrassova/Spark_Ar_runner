@@ -177,13 +177,13 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   const collide = () => {
     Reactive.and(pers.transform.y.add(pers.height).gt(tank.transform.y), (pers.transform.y.lt(tank.transform.y.add(tank.height)))).monitor().subscribe(evt => {
       pers.isYHit = evt.newValue
-      Diagnostics.log('1')
+      // Diagnostics.log('y')
     })
 
     Reactive.and(pers.transform.x.add(pers.width).gt(tank.transform.x), (pers.transform.x.lt(tank.transform.x.add(tank.width)))).monitor().subscribe(evt => {
-      Diagnostics.log('2')
       if (!evt.newValue) {
         material.diffuse = collider
+        Diagnostics.log('boom')
       }
     })
   }
