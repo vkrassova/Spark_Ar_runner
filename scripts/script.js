@@ -183,8 +183,8 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     Reactive.and(pers.transform.x.add(pers.width).gt(tank.transform.x), (pers.transform.x.lt(tank.transform.x.add(tank.width)))).monitor().subscribe(evt => {
       if (!evt.newValue) {
         material.diffuse = collider
-        Diagnostics.log('boom')
       }
+      Diagnostics.log('boom')
     })
   }
 
