@@ -19,6 +19,7 @@ const screenW = CameraInfo.previewSize.x.div(screenScale)
 const screenH = CameraInfo.previewSize.y.div(screenScale);
 
 (async function () {
+  const gameCanvas = await Scene.root.findFirst('game')
   const pers = await Scene.root.findFirst('pers')
   const tank = await Scene.root.findFirst('tank')
   const frontSecond = await Scene.root.findFirst('front_2')
@@ -26,6 +27,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   const back = await Scene.root.findFirst('sity_back')
   const backImage = [frontFirst, frontSecond, back]
   const user = await Scene.root.findFirst('user')
+  // const endGame = await Scene.root.findFirst('end')
 
   const startPoint = 0
   const startFrontSecond = screenW.mul(6.3)
@@ -40,6 +42,8 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   const [material] = await Promise.all([
     Materials.findFirst('pers-mat')
   ])
+
+  // endGame.hidden = true
 
   material.diffuse = runSeq
 
@@ -165,6 +169,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
 
   const endedGame = () => {
     state.isPlay = true
+    material.diffuse = collider
     stageFrontTD.stop()
     stageBackTD.stop()
     stageTankTD.stop()
@@ -176,12 +181,16 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
       pers.isYHit = evt.newValue
     })
 
-    Reactive.and(pers.transform.x.add(pers.width).gt(tank.transform.x), (pers.transform.x.lt(tank.transform.x.add(tank.width)))).monitor().subscribe(evt => {
+    Reactive.and(pers.transform.x.add(pers.width).gt(tank.transform.x), (pers.transform.x.add(20).lt(tank.transform.x.add(tank.width)))).monitor().subscribe(evt => {
       if (!pers.isYHit && !state.isPlay) {
-        material.diffuse = collider
+        Diagnostics.log('1')
         endedGame()
       }
     })
+  }
+
+  const resetGame = () => {
+    stageFrontTD.start()
   }
 
   let isStart = true
@@ -201,6 +210,11 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
 
     if (isRun) return
     isRun = true
+
+    if (state.isPlay) {
+      resetGame()
+    }
+    Diagnostics.log('2')
   })
 
   FaceGestures.onBlink(face).subscribe(() => {
