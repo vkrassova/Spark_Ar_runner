@@ -8,7 +8,6 @@ const Animation = require('Animation')
 const Textures = require('Textures')
 const CameraInfo = require('CameraInfo')
 const Materials = require('Materials')
-// const Time = require('Time')
 const Diagnostics = require('Diagnostics')
 
 const face = FaceTracking.face(0)
