@@ -46,7 +46,6 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
 
   // параметры персонажа и препятствия
   const persWidth = screenW.mul(0.18)
-
   pers.width = persWidth
   pers.height = screenW.mul(0.25)
   pers.transform.y = screenH.mul(0.65)
@@ -77,21 +76,37 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   user.transform.x = rightUser
   user.transform.y = widthImageUser.div(2)
 
+  const state = {
+    isPlay: false
+  }
+
+  const stageFrontTD = Animation.timeDriver({
+    durationMilliseconds: 7000,
+    loopCount: Infinity,
+    mirror: false
+  })
+
+  const stageBackTD = Animation.timeDriver({
+    durationMilliseconds: 12000,
+    loopCount: Infinity,
+    mirror: false
+  })
+
+  const stageTankTD = Animation.timeDriver({
+    durationMilliseconds: 2000,
+    loopCount: Infinity,
+    mirror: false
+  })
+
   // camera texture animation
   const initUserAnimation = () => {
     const sampler = Animation.samplers.linear(rightUser.pinLastValue(), leftUser.pinLastValue())
 
-    const stageTD = Animation.timeDriver({
-      durationMilliseconds: 7000,
-      loopCount: Infinity,
-      mirror: false
-    })
-
-    const animationStage = Animation.animate(stageTD, sampler)
+    const animationStage = Animation.animate(stageFrontTD, sampler)
 
     user.transform.x = animationStage
 
-    stageTD.start()
+    stageFrontTD.start()
   }
 
   // background animation
@@ -100,34 +115,16 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     const samplerSecond = Animation.samplers.linear(startFrontSecond.pinLastValue(), startPoint)
     const samplerBack = Animation.samplers.linear(startPoint, leftBack.pinLastValue())
 
-    const stageTD = Animation.timeDriver({
-      durationMilliseconds: 7000,
-      loopCount: Infinity,
-      mirror: false
-    })
-
-    const stage1TD = Animation.timeDriver({
-      durationMilliseconds: 12000,
-      loopCount: Infinity,
-      mirror: false
-    })
-
-    const animationStage1 = Animation.animate(stageTD, samplerFirst)
-    const animationStage2 = Animation.animate(stageTD, samplerSecond)
-    const animationStage3 = Animation.animate(stage1TD, samplerBack)
+    const animationStage1 = Animation.animate(stageFrontTD, samplerFirst)
+    const animationStage2 = Animation.animate(stageFrontTD, samplerSecond)
+    const animationStage3 = Animation.animate(stageBackTD, samplerBack)
 
     frontFirst.transform.x = animationStage1
     frontSecond.transform.x = animationStage2
     back.transform.x = animationStage3
 
-    stageTD.start()
-    stage1TD.start()
-
-    stageTD.onCompleted().subscribe(() => {
-      if (material.diffuse === collider) {
-        stageTD.stop()
-      }
-    })
+    stageFrontTD.start()
+    stageBackTD.start()
   }
 
   const persUp = screenW.mul(0.72)
@@ -160,17 +157,18 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   const initTankAnimation = () => {
     const sampler = Animation.samplers.linear(rightHide.pinLastValue(), leftHide.pinLastValue())
 
-    const stageTD = Animation.timeDriver({
-      durationMilliseconds: 2000,
-      loopCount: Infinity,
-      mirror: false
-    })
-
-    const animationStage = Animation.animate(stageTD, sampler)
+    const animationStage = Animation.animate(stageTankTD, sampler)
 
     tank.transform.x = animationStage
 
-    stageTD.start()
+    stageTankTD.start()
+  }
+
+  const endedGame = () => {
+    state.isPlay = true
+    stageFrontTD.stop()
+    stageBackTD.stop()
+    stageTankTD.stop()
   }
 
   // collider
@@ -180,8 +178,9 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     })
 
     Reactive.and(pers.transform.x.add(pers.width).gt(tank.transform.x), (pers.transform.x.lt(tank.transform.x.add(tank.width)))).monitor().subscribe(evt => {
-      if (!pers.isYHit) {
+      if (!pers.isYHit && !state.isPlay) {
         material.diffuse = collider
+        endedGame()
       }
     })
   }
@@ -207,15 +206,14 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
 
   FaceGestures.onBlink(face).subscribe(() => {
     if (isBlink) {
-      if (isRun) {
-        Instruction.bind(false, 'blink_eyes')
-        initPersJump()
-        material.diffuse = jumpSeq
-        jumpSeq.currentFrame = 1
+      if (!state.isPlay) {
+        if (isRun) {
+          Instruction.bind(false, 'blink_eyes')
+          initPersJump()
+          material.diffuse = jumpSeq
+          jumpSeq.currentFrame = 1
+        }
       }
     }
   })
-  Diagnostics.watch('tank_y', tank.transform.y)
-  Diagnostics.watch('pers_x', pers.transform.x)
-  Diagnostics.watch('tank_x', tank.transform.x)
 })()
