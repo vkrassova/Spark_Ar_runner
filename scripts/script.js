@@ -130,7 +130,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     })
   }
 
-  const persUp = screenW.mul(0.75)
+  const persUp = screenW.mul(0.72)
   const persDown = screenH.mul(0.65)
 
   // pers jump
@@ -175,16 +175,14 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
 
   // collider
   const collide = () => {
-    Reactive.and(pers.transform.y.add(pers.height).gt(tank.transform.y), (pers.transform.y.lt(tank.transform.y.add(tank.height)))).monitor().subscribe(evt => {
+    tank.transform.y.add(tank.height).gt(pers.transform.y.add(pers.height)).and(pers.transform.y.lt(pers.transform.y.add(tank.height))).monitor().subscribe(evt => {
       pers.isYHit = evt.newValue
-      // Diagnostics.log('y')
     })
 
     Reactive.and(pers.transform.x.add(pers.width).gt(tank.transform.x), (pers.transform.x.lt(tank.transform.x.add(tank.width)))).monitor().subscribe(evt => {
-      if (!evt.newValue) {
+      if (!pers.isYHit) {
         material.diffuse = collider
       }
-      Diagnostics.log('boom')
     })
   }
 
@@ -217,7 +215,6 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
       }
     }
   })
-  Diagnostics.watch('pers_y', pers.transform.y)
   Diagnostics.watch('tank_y', tank.transform.y)
   Diagnostics.watch('pers_x', pers.transform.x)
   Diagnostics.watch('tank_x', tank.transform.x)
