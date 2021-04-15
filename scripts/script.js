@@ -19,7 +19,7 @@ const screenW = CameraInfo.previewSize.x.div(screenScale)
 const screenH = CameraInfo.previewSize.y.div(screenScale);
 
 (async function () {
-  const gameCanvas = await Scene.root.findFirst('game')
+  // const gameCanvas = await Scene.root.findFirst('game')
   const pers = await Scene.root.findFirst('pers')
   const tank = await Scene.root.findFirst('tank')
   const frontSecond = await Scene.root.findFirst('front_2')
@@ -27,7 +27,6 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   const back = await Scene.root.findFirst('sity_back')
   const backImage = [frontFirst, frontSecond, back]
   const user = await Scene.root.findFirst('user')
-  // const endGame = await Scene.root.findFirst('end')
 
   const startPoint = 0
   const startFrontSecond = screenW.mul(6.3)
@@ -42,8 +41,6 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   const [material] = await Promise.all([
     Materials.findFirst('pers-mat')
   ])
-
-  // endGame.hidden = true
 
   material.diffuse = runSeq
 
@@ -168,6 +165,36 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     stageTankTD.start()
   }
 
+  // collider
+  const collide = () => {
+    Reactive.and(
+      tank.transform.y.add(tank.height).gt(pers.transform.y.add(pers.height)),
+      pers.transform.y.lt(pers.transform.y.add(tank.height))
+    ).monitor().subscribe(evt => {
+      pers.isYHit = evt.newValue
+    })
+
+    Reactive.and(
+      pers.transform.x.add(pers.width).gt(tank.transform.x),
+      pers.transform.x.add(20).lt(tank.transform.x.add(tank.width))
+    ).monitor().subscribe(evt => {
+      if (!pers.isYHit && !state.isPlay) {
+        Diagnostics.log('1')
+        endedGame()
+      }
+    })
+  }
+
+  const startGame = () => {
+    Instruction.bind(false, 'tap_to_start')
+    Instruction.bind(true, 'blink_eyes')
+    initFrontAnime()
+    initUserAnimation()
+    initTankAnimation()
+    collide()
+    isStart = false
+  }
+
   const endedGame = () => {
     state.isPlay = true
     material.diffuse = collider
@@ -176,34 +203,20 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     stageTankTD.stop()
   }
 
-  // collider
-  const collide = () => {
-    tank.transform.y.add(tank.height).gt(pers.transform.y.add(pers.height)).and(pers.transform.y.lt(pers.transform.y.add(tank.height))).monitor().subscribe(evt => {
-      pers.isYHit = evt.newValue
-    })
-
-    Reactive.and(pers.transform.x.add(pers.width).gt(tank.transform.x), (pers.transform.x.add(20).lt(tank.transform.x.add(tank.width)))).monitor().subscribe(evt => {
-      if (!pers.isYHit && !state.isPlay) {
-        Diagnostics.log('1')
-        endedGame()
-      }
-    })
-  }
-
   let isStart = true
   let isRun = false
   let isBlink = true
 
   TouchGestures.onTap().subscribe((gesture) => {
     if (isStart) {
-      Instruction.bind(false, 'tap_to_start')
-      Instruction.bind(true, 'blink_eyes')
-      initFrontAnime()
-      initUserAnimation()
-      initTankAnimation()
-      collide()
-      isStart = false
+      if (!state.isPlay) {
+        startGame()
+      }
     }
+
+    // if (!isStart && state.isPlay) {
+    //   resetGame()
+    // }
 
     if (isRun) return
     isRun = true
