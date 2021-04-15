@@ -56,7 +56,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
 
   tank.width = screenW.mul(0.15)
   tank.height = screenW.mul(0.23)
-  tank.transform.y = screenH.mul(0.65)
+  tank.transform.y = screenH.mul(0.66)
   tank.transform.x = screenW.mul(1)
 
   // параметры для бэкграунда
@@ -83,6 +83,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     isPlay: false
   }
 
+  // time drivers for animations
   const stageFrontTD = Animation.timeDriver({
     durationMilliseconds: 7000,
     loopCount: Infinity,
@@ -189,10 +190,6 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     })
   }
 
-  const resetGame = () => {
-    stageFrontTD.start()
-  }
-
   let isStart = true
   let isRun = false
   let isBlink = true
@@ -210,11 +207,6 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
 
     if (isRun) return
     isRun = true
-
-    if (state.isPlay) {
-      resetGame()
-    }
-    Diagnostics.log('2')
   })
 
   FaceGestures.onBlink(face).subscribe(() => {
