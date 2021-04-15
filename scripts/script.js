@@ -9,7 +9,6 @@ const Textures = require('Textures')
 const CameraInfo = require('CameraInfo')
 const Materials = require('Materials')
 const Diagnostics = require('Diagnostics')
-
 const face = FaceTracking.face(0)
 
 Instruction.bind(true, 'tap_to_start')
@@ -56,12 +55,12 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   tank.transform.y = screenH.mul(0.66)
   tank.transform.x = screenW.mul(1)
 
-  // параметры для бэкграунда
-  backImage.forEach(img => {
-    img.width = screenW.mul(6.3)
-    img.height = screenH.mul(1)
-    img.transform.y = startPoint
-  })
+  // параметры для фоновых картинок
+  for (const i of backImage) {
+    i.width = screenW.mul(6.3)
+    i.height = screenH.mul(1)
+    i.transform.y = startPoint
+  }
 
   frontFirst.transform.x = startPoint
   frontSecond.transform.x = startFrontSecond
@@ -94,7 +93,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   })
 
   const stageTankTD = Animation.timeDriver({
-    durationMilliseconds: 2000,
+    durationMilliseconds: 1400,
     loopCount: Infinity,
     mirror: false
   })
@@ -133,10 +132,10 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
 
   // pers jump
   const initPersJump = () => {
-    const sampler = Animation.samplers.easeInOutQuint(persDown.pinLastValue(), persUp.pinLastValue())
+    const sampler = Animation.samplers.easeInOutSine(persDown.pinLastValue(), persUp.pinLastValue())
 
     const stageTD = Animation.timeDriver({
-      durationMilliseconds: 600,
+      durationMilliseconds: 500,
       loopCount: 2,
       mirror: true
     })
@@ -176,7 +175,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
 
     Reactive.and(
       pers.transform.x.add(pers.width).gt(tank.transform.x),
-      pers.transform.x.add(20).lt(tank.transform.x.add(tank.width))
+      pers.transform.x.add(20).lt(tank.transform.x.add(tank.width.add(10)))
     ).monitor().subscribe(evt => {
       if (!pers.isYHit && !state.isPlay) {
         Diagnostics.log('1')
@@ -195,17 +194,18 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     isStart = false
   }
 
+  let isStart = true
+  let isRun = false
+  let isBlink = true
+
   const endedGame = () => {
     state.isPlay = true
     material.diffuse = collider
     stageFrontTD.stop()
     stageBackTD.stop()
     stageTankTD.stop()
+    isBlink = false
   }
-
-  let isStart = true
-  let isRun = false
-  let isBlink = true
 
   TouchGestures.onTap().subscribe((gesture) => {
     if (isStart) {
@@ -213,10 +213,6 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
         startGame()
       }
     }
-
-    // if (!isStart && state.isPlay) {
-    //   resetGame()
-    // }
 
     if (isRun) return
     isRun = true
