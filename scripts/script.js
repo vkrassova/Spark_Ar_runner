@@ -38,19 +38,21 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
     score: 0
   }
 
-  // for (const el of scale) {
-  //   el.hidden = true
-  // }
+  for (const el of scale) {
+    el.hidden = true
+  }
 
   one.width = screenW.div(10)
   one.height = screenW.div(10)
   two.width = screenW.div(10)
   two.height = screenW.div(10)
+  three.width = screenW.div(10)
+  three.height = screenW.div(10)
 
   scoreBg.width = screenW.mul(0.6)
   scoreBg.height = screenH.mul(0.2)
-  scoreBg.transform.x = screenW.mul(0.22)
-  scoreText.transform.x = screenW.mul(0.22)
+  scoreBg.transform.x = screenW.mul(0.23)
+  scoreText.transform.x = screenW.mul(0.24)
   scoreText.transform.y = 0
 
   const startPoint = 0
@@ -214,6 +216,9 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
         }
         if (settings.score === 8) {
           two.hidden = false
+        }
+        if (settings.score === 12) {
+          three.hidden = false
         }
       }
       stageTD.reset()
