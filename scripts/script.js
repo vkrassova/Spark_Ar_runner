@@ -26,6 +26,11 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   const back = await Scene.root.findFirst('sity_back')
   const backImage = [frontFirst, frontSecond, back]
   const user = await Scene.root.findFirst('user')
+  const scoreText = await Scene.root.findFirst('score-text')
+
+  const settings = {
+    score: 0
+  }
 
   const startPoint = 0
   const startFrontSecond = screenW.mul(6.3)
@@ -187,6 +192,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   const startGame = () => {
     Instruction.bind(false, 'tap_to_start')
     Instruction.bind(true, 'blink_eyes')
+    scoreText.text = `${settings.score}`
     initFrontAnime()
     initUserAnimation()
     initTankAnimation()
@@ -224,6 +230,7 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
         if (isRun) {
           Instruction.bind(false, 'blink_eyes')
           initPersJump()
+          scoreText.text = `${++settings.score}`
           material.diffuse = jumpSeq
           jumpSeq.currentFrame = 1
         }
