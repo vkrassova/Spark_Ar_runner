@@ -9,6 +9,7 @@ const Textures = require('Textures')
 const CameraInfo = require('CameraInfo')
 const Materials = require('Materials')
 const Diagnostics = require('Diagnostics')
+const Time = require('Time')
 const face = FaceTracking.face(0)
 
 Instruction.bind(true, 'tap_to_start')
@@ -26,11 +27,31 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   const back = await Scene.root.findFirst('sity_back')
   const backImage = [frontFirst, frontSecond, back]
   const user = await Scene.root.findFirst('user')
+  const scoreBg = await Scene.root.findFirst('score')
   const scoreText = await Scene.root.findFirst('score-text')
+  const one = await Scene.root.findFirst('1')
+  const two = await Scene.root.findFirst('2')
+  const three = await Scene.root.findFirst('3')
+  const scale = [one, two, three]
 
   const settings = {
     score: 0
   }
+
+  // for (const el of scale) {
+  //   el.hidden = true
+  // }
+
+  one.width = screenW.div(10)
+  one.height = screenW.div(10)
+  two.width = screenW.div(10)
+  two.height = screenW.div(10)
+
+  scoreBg.width = screenW.mul(0.6)
+  scoreBg.height = screenH.mul(0.2)
+  scoreBg.transform.x = screenW.mul(0.22)
+  scoreText.transform.x = screenW.mul(0.22)
+  scoreText.transform.y = 0
 
   const startPoint = 0
   const startFrontSecond = screenW.mul(6.3)
@@ -135,29 +156,6 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   const persUp = screenW.mul(0.72)
   const persDown = screenH.mul(0.65)
 
-  // pers jump
-  const initPersJump = () => {
-    const sampler = Animation.samplers.easeInOutSine(persDown.pinLastValue(), persUp.pinLastValue())
-
-    const stageTD = Animation.timeDriver({
-      durationMilliseconds: 500,
-      loopCount: 2,
-      mirror: true
-    })
-
-    const animationStage = Animation.animate(stageTD, sampler)
-
-    pers.transform.y = animationStage
-    stageTD.start()
-
-    stageTD.onCompleted().subscribe(() => {
-      material.diffuse = runSeq
-    })
-  }
-
-  const rightHide = screenW.mul(1)
-  const leftHide = screenW.mul(0.22).neg()
-
   // tank animation
   const initTankAnimation = () => {
     const sampler = Animation.samplers.linear(rightHide.pinLastValue(), leftHide.pinLastValue())
@@ -183,11 +181,47 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
       pers.transform.x.add(20).lt(tank.transform.x.add(tank.width.add(10)))
     ).monitor().subscribe(evt => {
       if (!pers.isYHit && !state.isPlay) {
-        Diagnostics.log('1')
+        state.isPlay = true
+        Diagnostics.log(state.isPlay)
         endedGame()
       }
     })
   }
+
+  // pers jump
+  const initPersJump = () => {
+    const sampler = Animation.samplers.easeInOutSine(persDown.pinLastValue(), persUp.pinLastValue())
+
+    const stageTD = Animation.timeDriver({
+      durationMilliseconds: 500,
+      loopCount: 2,
+      mirror: true
+    })
+
+    const animationStage = Animation.animate(stageTD, sampler)
+
+    pers.transform.y = animationStage
+    stageTD.start()
+
+    stageTD.onCompleted().subscribe(() => {
+      material.diffuse = runSeq
+      if (!state.isPlay) {
+        scoreText.text = `${++settings.score}`
+        Diagnostics.log(state.isPlay)
+        Diagnostics.log(settings.score)
+        if (settings.score === 4) {
+          one.hidden = false
+        }
+        if (settings.score === 8) {
+          two.hidden = false
+        }
+      }
+      stageTD.reset()
+    })
+  }
+
+  const rightHide = screenW.mul(1)
+  const leftHide = screenW.mul(0.22).neg()
 
   const startGame = () => {
     Instruction.bind(false, 'tap_to_start')
@@ -205,7 +239,6 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   let isBlink = true
 
   const endedGame = () => {
-    state.isPlay = true
     material.diffuse = collider
     stageFrontTD.stop()
     stageBackTD.stop()
@@ -230,7 +263,6 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
         if (isRun) {
           Instruction.bind(false, 'blink_eyes')
           initPersJump()
-          scoreText.text = `${++settings.score}`
           material.diffuse = jumpSeq
           jumpSeq.currentFrame = 1
         }
