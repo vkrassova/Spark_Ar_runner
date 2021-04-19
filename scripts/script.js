@@ -40,14 +40,9 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
 
   for (const el of scale) {
     el.hidden = true
+    el.width = screenW.div(12)
+    el.height = screenW.div(12)
   }
-
-  one.width = screenW.div(10)
-  one.height = screenW.div(10)
-  two.width = screenW.div(10)
-  two.height = screenW.div(10)
-  three.width = screenW.div(10)
-  three.height = screenW.div(10)
 
   scoreBg.width = screenW.mul(0.6)
   scoreBg.height = screenH.mul(0.2)
