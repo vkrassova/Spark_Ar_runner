@@ -31,8 +31,13 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
   const scoreText = await Scene.root.findFirst('score-text')
   const one = await Scene.root.findFirst('1')
   const two = await Scene.root.findFirst('2')
+  const four = await Scene.root.findFirst('4')
+  const five = await Scene.root.findFirst('5')
+  const six = await Scene.root.findFirst('6')
+  const seven = await Scene.root.findFirst('7')
+  const eight = await Scene.root.findFirst('8')
   const three = await Scene.root.findFirst('3')
-  const scale = [one, two, three]
+  const scale = [one, two, three, four, five, six, seven, eight]
 
   const settings = {
     score: 0
@@ -206,14 +211,29 @@ const screenH = CameraInfo.previewSize.y.div(screenScale);
         scoreText.text = `${++settings.score}`
         Diagnostics.log(state.isPlay)
         Diagnostics.log(settings.score)
-        if (settings.score === 4) {
+        if (settings.score === 1) {
           one.hidden = false
         }
-        if (settings.score === 8) {
+        if (settings.score === 4) {
           two.hidden = false
         }
-        if (settings.score === 12) {
+        if (settings.score === 8) {
           three.hidden = false
+        }
+        if (settings.score === 12) {
+          four.hidden = false
+        }
+        if (settings.score === 16) {
+          five.hidden = false
+        }
+        if (settings.score === 20) {
+          six.hidden = false
+        }
+        if (settings.score === 24) {
+          seven.hidden = false
+        }
+        if (settings.score === 28) {
+          eight.hidden = false
         }
       }
       stageTD.reset()
